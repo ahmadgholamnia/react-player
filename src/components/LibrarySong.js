@@ -10,18 +10,31 @@ const LibrarySong = ({
   setIsPlaying,
   isPlaying,
   audioRef,
+  active,
+  setSongs,
 }) => {
   const songSelectHandler = () => {
     const selectedSong = songs.filter((state) => state.id === id);
     setCurrentSong(selectedSong[0]);
-    // if (isPlaying) {
-    //   const result = await fetch(audioRef.src);
-    //   const result2 = result.status;
-    //   console.log(result);
-    //   if (result2 === 200) {
-    //     audioRef.current.play();
-    //   }
-    // }
+
+    // Add Active State
+    const newSongs = songs.map((song) => {
+      if (song.id === id) {
+        return {
+          ...song,
+          active: true,
+        };
+      } else {
+        return {
+          ...song,
+          active: false,
+        };
+      }
+    });
+    setSongs(newSongs);
+
+    console.log(newSongs);
+
     if (isPlaying) {
       const playPromise = audioRef.current.play();
       if (playPromise !== undefined) {
@@ -31,8 +44,12 @@ const LibrarySong = ({
       }
     }
   };
+
   return (
-    <div onClick={songSelectHandler} className="library-song">
+    <div
+      onClick={songSelectHandler}
+      className={`library-song ${active ? 'selected' : ''}`}
+    >
       <img src={cover} alt={name} />
       <div className="song-description">
         <h3>{name}</h3>
@@ -43,3 +60,12 @@ const LibrarySong = ({
 };
 
 export default LibrarySong;
+
+// if (isPlaying) {
+//   const result = await fetch(audioRef.src);
+//   const result2 = result.status;
+//   console.log(result);
+//   if (result2 === 200) {
+//     audioRef.current.play();
+//   }
+// }
